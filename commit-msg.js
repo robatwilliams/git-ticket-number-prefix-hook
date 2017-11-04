@@ -17,13 +17,20 @@ if (!branchRegexMatch) {
     console.log("commit-msg: on non-prefixed branch; no action");
     process.exit(0);
 }
+const desiredPrefix = branchRegexMatch[1];
 
-if (prefixRegExp.test(originalMessage)) {
-    console.log("commit-msg: message already prefixed; no action");
+const originalPrefixMatch = prefixRegExp.exec(originalMessage);
+
+if (originalPrefixMatch) {
+    if (originalPrefixMatch[1] === desiredPrefix) {
+        console.log("commit-msg: message already prefixed correctly; no action");
+    } else {
+        console.log(`commit-msg: message prefix '${originalPrefixMatch[1]}' does not match branch prefix '${desiredPrefix}'`);
+        process.exit(1);
+    }
 } else if (getMergeHead()) {
     console.log("commit-msg: merge commit; no action");
 } else {
-    const desiredPrefix = branchRegexMatch[1];
     console.log("commit-msg: prefix not found; prepending %s", desiredPrefix);
 
     fs.writeFileSync(messageFile, desiredPrefix + " " + originalMessage);

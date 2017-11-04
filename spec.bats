@@ -32,12 +32,21 @@ createCommitFile() {
     [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
 }
 
-@test "doesn't add a prefix if one is already given" {
+@test "doesn't add a prefix if correct one is already given" {
     git checkout -b MYPROJ-123-new-feature
 
     createCommitFile "MYPROJ-123 Add file"
 
     [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
+}
+
+@test "aborts commit if incorrect prefix one is already given" {
+    git checkout -b MYPROJ-123-new-feature
+
+    run createCommitFile "MYPROJ-100 Add file"
+
+    [ "$status" -eq 1 ]
+    [ "$output" = "commit-msg: message prefix 'MYPROJ-100' does not match branch prefix 'MYPROJ-123'" ]
 }
 
 @test "respects UTF-8 characters in message" {

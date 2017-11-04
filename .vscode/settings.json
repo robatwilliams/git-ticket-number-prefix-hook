@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.bats": "shellscript"
+    },
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true
+}

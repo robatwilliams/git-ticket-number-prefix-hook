@@ -7,7 +7,7 @@ setup() {
     cd fixture
     git init
 
-    cp ../commit-msg.js .git/hooks/commit-msg
+    cp ../commit-msg .git/hooks/commit-msg
 }
 
 createCommitFile() {

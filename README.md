@@ -11,7 +11,7 @@ It's implemented in JavaScript, not shell script.
 This made it easier for me to write, and will hopefully also make it easier for you to modify should you need to.
 
 ## Installation
-Copy `commit-msg.js` to the `.git/hooks` folder in your repository, and remove the file extension.
+Copy `commit-msg` to the `.git/hooks` folder in your repository.
 
 ## Tests
 The hook is tested in a fixture Git repository. Tests are implemented and run using the [BATS](https://github.com/bats-core/bats-core/) framework; each one is a small shell script.

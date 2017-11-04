@@ -20,6 +20,8 @@ if (!branchRegexMatch) {
 
 if (prefixRegExp.test(originalMessage)) {
     console.log("commit-msg: message already prefixed; no action");
+} else if (getMergeHead()) {
+    console.log("commit-msg: merge commit; no action");
 } else {
     const desiredPrefix = branchRegexMatch[1];
     console.log("commit-msg: prefix not found; prepending %s", desiredPrefix);
@@ -29,4 +31,14 @@ if (prefixRegExp.test(originalMessage)) {
 
 function getBranchName() {
     return child_process.execSync("git symbolic-ref --short -q HEAD", { encoding: "UTF-8" });
+}
+
+function getMergeHead() {
+    try {
+        return child_process.execSync("git rev-parse -q --verify MERGE_HEAD");
+    } catch (e) {
+        if (e.stdout.length + e.stderr.length > 0) {
+            throw e;
+        }
+    }
 }

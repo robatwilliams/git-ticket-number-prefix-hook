@@ -11,8 +11,10 @@ setup() {
 }
 
 createCommitFile() {
-    echo Hello > file.txt
-    git add file.txt
+    local filename=${2:-file.txt}
+
+    echo Hello > $filename
+    git add $filename
     git commit -m "$1"
 }
 
@@ -69,4 +71,17 @@ createCommitFile() {
     createCommitFile "This enhances feature MYPROJ-100"
 
     [ "$(git log --format=%B)" == "MYPROJ-123 This enhances feature MYPROJ-100" ]
+}
+
+@test "doesn't prefix merge commits" {
+    git checkout -b MYPROJ-123-new-feature
+    createCommitFile "a"
+
+    git checkout -b other
+    createCommitFile "b" "anotherFile.txt"
+
+    git checkout MYPROJ-123-new-feature
+    git merge --no-ff other
+
+    [ "$(git log -n 1 --format=%B)" ==  "Merge branch 'other' into MYPROJ-123-new-feature" ]
 }

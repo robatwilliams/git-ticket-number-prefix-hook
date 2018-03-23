@@ -21,5 +21,5 @@ The hook is tested in a fixture Git repository. Tests are implemented and run us
 git clone https://github.com/bats-core/bats-core.git
 
 # Run tests
-./bats-core/libexec/bats spec.bats
+./test.sh
 ```

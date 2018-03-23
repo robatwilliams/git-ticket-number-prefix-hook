@@ -1,6 +1,14 @@
 #!/usr/bin/env bats
 
+testOnly() {
+    if [ "$BATS_TEST_DESCRIPTION" != "$1" ]; then
+        skip
+    fi
+}
+
 setup() {
+    # testOnly "allows a grouping token to be used at the start of the branch name"
+
     rm -rf fixture
 
     mkdir fixture

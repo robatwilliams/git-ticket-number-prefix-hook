@@ -32,6 +32,14 @@ createCommitFile() {
     [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
 }
 
+@test "adds prefix on branch named by only the ticket number" {
+    git checkout -b MYPROJ-123
+
+    createCommitFile "Add file"
+
+    [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
+}
+
 @test "doesn't add a prefix if correct one is already given" {
     git checkout -b MYPROJ-123-new-feature
 

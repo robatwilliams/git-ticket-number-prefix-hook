@@ -14,7 +14,7 @@ if (originalMessage.length === 0) {
     process.exit(0);
 }
 
-const branchRegexMatch = prefixRegExp.exec(getBranchName());
+const branchRegexMatch = prefixRegExp.exec(getBranchName().replace(/^[a-z]+\//, ''));
 
 if (!branchRegexMatch) {
     console.log("commit-msg: on non-prefixed branch; no action");

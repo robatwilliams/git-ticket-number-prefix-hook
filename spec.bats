@@ -117,3 +117,11 @@ createCommitFile() {
     [ "$(git log -n 1 --format=%s)" == "squash! MYPROJ-123 message" ]
     [ "$(git log -n 1 --format=%b)" == "body" ]
 }
+
+@test "allows a grouping token to be used at the start of the branch name" {
+    git checkout -b feature/MYPROJ-123-new-feature
+
+    createCommitFile "Add file"
+
+    [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
+}

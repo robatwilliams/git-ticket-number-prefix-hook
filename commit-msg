@@ -9,6 +9,9 @@ const originalMessage = fs.readFileSync(messageFile, { encoding: "UTF-8" });
 
 if (originalMessage.length === 0) {
     process.exit(0);    // let Git reject it
+} else if (/^(fixup|squash)!/.test(originalMessage)) {
+    console.log("commit-msg: fixup or squash commit; no action");
+    process.exit(0);
 }
 
 const branchRegexMatch = prefixRegExp.exec(getBranchName());

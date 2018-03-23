@@ -94,3 +94,26 @@ createCommitFile() {
 
     [ "$(git log -n 1 --format=%B)" ==  "Merge branch 'other' into MYPROJ-123-new-feature" ]
 }
+
+@test "doesn't prefix fixup commits" {
+    git checkout -b MYPROJ-123-new-feature
+    createCommitFile "message"
+
+    echo HelloAgain > file.txt
+    git add file.txt
+    git commit --fixup HEAD
+
+    [ "$(git log -n 1 --format=%B)" == "fixup! MYPROJ-123 message" ]
+}
+
+@test "doesn't prefix squash commits" {
+    git checkout -b MYPROJ-123-new-feature
+    createCommitFile "message"
+
+    echo HelloAgain > file.txt
+    git add file.txt
+    git commit --squash HEAD -m "body"
+
+    [ "$(git log -n 1 --format=%s)" == "squash! MYPROJ-123 message" ]
+    [ "$(git log -n 1 --format=%b)" == "body" ]
+}

@@ -65,6 +65,14 @@ createCommitFile() {
     [ "$output" = "commit-msg: message prefix 'MYPROJ-100' does not match branch prefix 'MYPROJ-123'" ]
 }
 
+@test "allows giving a prefix manually when on a non-prefixed branch" {
+    git checkout -b some-branch
+
+    createCommitFile "MYPROJ-100 Add file"
+
+    [ "$(git log --format=%B)" == "MYPROJ-100 Add file" ]
+}
+
 @test "respects UTF-8 characters in message" {
     git checkout -b MYPROJ-123-new-feature
 

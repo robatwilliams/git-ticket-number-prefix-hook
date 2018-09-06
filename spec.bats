@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 
+HOOK_VARIANT=js
+# HOOK_VARIANT=shell
+
 testOnly() {
     if [ "$BATS_TEST_DESCRIPTION" != "$1" ]; then
         skip
@@ -15,7 +18,7 @@ setup() {
     cd fixture
     git init
 
-    cp ../commit-msg .git/hooks/commit-msg
+    cp "../hook/$HOOK_VARIANT/commit-msg" .git/hooks/commit-msg
 }
 
 createCommitFile() {

@@ -8,6 +8,9 @@ branchName=`git symbolic-ref --short -q HEAD`
 
 if [[ "$branchName" =~ $prefixRegExp ]]; then
   branchRegExpMatch=$BASH_REMATCH
+else
+  echo 'commit-msg: on non-prefixed branch; no action'
+  exit 0
 fi
 
 desiredPrefix="${branchRegExpMatch[0]}"

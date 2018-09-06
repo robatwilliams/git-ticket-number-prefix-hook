@@ -20,6 +20,9 @@ if [[ "$originalMessage" =~ $prefixRegExp ]]; then
 
   if [ "${BASH_REMATCH[1]}" = "$desiredPrefix" ]; then
     echo 'commit-msg: message already prefixed correctly; no action'
+  else
+    echo "commit-msg: message prefix '${BASH_REMATCH[1]}' does not match branch prefix '${desiredPrefix}'"
+    exit 1
   fi
 else
   echo "$desiredPrefix $originalMessage" > $messageFile

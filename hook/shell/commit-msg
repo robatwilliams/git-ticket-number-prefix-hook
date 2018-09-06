@@ -1,0 +1,15 @@
+#!/bin/bash
+
+prefixRegExp=(^[A-Z]+-[0-9]+)
+
+messageFile=$1
+originalMessage=`cat $messageFile`
+branchName=`git symbolic-ref --short -q HEAD`
+
+if [[ "$branchName" =~ $prefixRegExp ]]; then
+  branchRegExpMatch=$BASH_REMATCH
+fi
+
+desiredPrefix="${branchRegExpMatch[0]}"
+
+echo "$desiredPrefix $originalMessage" > $messageFile

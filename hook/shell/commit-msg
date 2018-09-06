@@ -1,18 +1,26 @@
 #!/bin/bash
 
-prefixRegExp=(^[A-Z]+-[0-9]+)
+prefixRegExp=(^[A-Z]+-[0-9]+).*
 
 messageFile=$1
 originalMessage=`cat $messageFile`
 branchName=`git symbolic-ref --short -q HEAD`
 
 if [[ "$branchName" =~ $prefixRegExp ]]; then
-  branchRegExpMatch=$BASH_REMATCH
+  : # $BASH_REMATCH is branchPrefixMatch
 else
   echo 'commit-msg: on non-prefixed branch; no action'
   exit 0
 fi
 
-desiredPrefix="${branchRegExpMatch[0]}"
+desiredPrefix="${BASH_REMATCH[1]}"
 
-echo "$desiredPrefix $originalMessage" > $messageFile
+if [[ "$originalMessage" =~ $prefixRegExp ]]; then
+  # $BASH_REMATCH is originalPrefixMatch
+
+  if [ "${BASH_REMATCH[1]}" = "$desiredPrefix" ]; then
+    echo 'commit-msg: message already prefixed correctly; no action'
+  fi
+else
+  echo "$desiredPrefix $originalMessage" > $messageFile
+fi

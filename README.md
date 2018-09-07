@@ -24,6 +24,7 @@ git clone https://github.com/bats-core/bats-core.git
 
 # Run tests
 ./test.sh
+./test.sh [variant]
 ```
 
 ## Want to go further?

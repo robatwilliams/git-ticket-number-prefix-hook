@@ -4,6 +4,11 @@ prefixRegExp=(^[A-Z]+-[0-9]+).*
 
 messageFile=$1
 originalMessage=`cat $messageFile`
+
+if [[ -z "$originalMessage" ]]; then
+  exit 0  # let Git reject it
+fi
+
 branchName=`git symbolic-ref --short -q HEAD`
 
 if [[ "$branchName" =~ $prefixRegExp ]]; then

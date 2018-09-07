@@ -43,5 +43,6 @@ if [[ "$originalMessage" =~ $prefixRegExp ]]; then
 elif [[ -n `getMergeHead` ]]; then
   echo 'commit-msg: merge commit; no action'
 else
+  echo "commit-msg: prefix not found; prepending $desiredPrefix"
   echo "$desiredPrefix $originalMessage" > $messageFile
 fi

@@ -7,6 +7,9 @@ originalMessage=`cat $messageFile`
 
 if [[ -z "$originalMessage" ]]; then
   exit 0  # let Git reject it
+elif [[ "$originalMessage" =~ ^(fixup|squash)! ]]; then
+  echo 'commit-msg: fixup or squash commit; no action'
+  exit 0
 fi
 
 branchName=`git symbolic-ref --short -q HEAD`

@@ -1,8 +1,5 @@
 #!/usr/bin/env bats
 
-HOOK_VARIANT=js
-# HOOK_VARIANT=shell
-
 testOnly() {
     if [ "$BATS_TEST_DESCRIPTION" != "$1" ]; then
         skip

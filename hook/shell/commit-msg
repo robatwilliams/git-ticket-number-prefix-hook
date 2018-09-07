@@ -2,6 +2,10 @@
 
 prefixRegExp=(^[A-Z]+-[0-9]+).*
 
+function getBranchName() {
+  git symbolic-ref --short -q HEAD
+}
+
 messageFile=$1
 originalMessage=`cat $messageFile`
 
@@ -12,7 +16,7 @@ elif [[ "$originalMessage" =~ ^(fixup|squash)! ]]; then
   exit 0
 fi
 
-branchName=`git symbolic-ref --short -q HEAD`
+branchName=$(echo `getBranchName` | sed 's/^[a-z]\+\///')
 
 if [[ "$branchName" =~ $prefixRegExp ]]; then
   : # $BASH_REMATCH is branchPrefixMatch

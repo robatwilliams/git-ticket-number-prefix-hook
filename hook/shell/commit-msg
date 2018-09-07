@@ -6,6 +6,10 @@ function getBranchName() {
   git symbolic-ref --short -q HEAD
 }
 
+function getMergeHead() {
+  git rev-parse -q --verify MERGE_HEAD
+}
+
 messageFile=$1
 originalMessage=`cat $messageFile`
 
@@ -36,6 +40,8 @@ if [[ "$originalMessage" =~ $prefixRegExp ]]; then
     echo "commit-msg: message prefix '${BASH_REMATCH[1]}' does not match branch prefix '${desiredPrefix}'"
     exit 1
   fi
+elif [[ -n `getMergeHead` ]]; then
+  echo 'commit-msg: merge commit; no action'
 else
   echo "$desiredPrefix $originalMessage" > $messageFile
 fi

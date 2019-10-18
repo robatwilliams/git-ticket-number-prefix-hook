@@ -2,7 +2,8 @@
 const child_process = require("child_process");
 const fs = require("fs");
 
-const prefixRegExp = /^([A-Z]+-[0-9]+).*/;
+const prefixRegExp = /^(([A-Z]+-)?[0-9]+).*/;
+const numericIdMessagePrefixRegExp = /^(#[0-9]+).*/;
 
 const messageFile = process.argv[2];
 const originalMessage = fs.readFileSync(messageFile, { encoding: "UTF-8" });
@@ -20,15 +21,18 @@ if (!branchRegexMatch) {
     console.log("commit-msg: on non-prefixed branch; no action");
     process.exit(0);
 }
-const desiredPrefix = branchRegexMatch[1];
 
-const originalPrefixMatch = prefixRegExp.exec(originalMessage);
+const isTicketIdNumeric = branchRegexMatch[2] === undefined;
+
+const desiredPrefix = (isTicketIdNumeric ? '#' : '') + branchRegexMatch[1];
+
+const originalPrefixMatch = (isTicketIdNumeric ? numericIdMessagePrefixRegExp : prefixRegExp).exec(originalMessage);
 
 if (originalPrefixMatch) {
     if (originalPrefixMatch[1] === desiredPrefix) {
         console.log("commit-msg: message already prefixed correctly; no action");
     } else {
-        console.log(`commit-msg: message prefix '${originalPrefixMatch[1]}' does not match branch prefix '${desiredPrefix}'`);
+        console.log(`commit-msg: message prefix '${originalPrefixMatch[1]}' does not match branch prefix '${branchRegexMatch[1]}'`);
         process.exit(1);
     }
 } else if (getMergeHead()) {

@@ -32,7 +32,7 @@ createCommitFile() {
     [ "$(git log --format=%B)" == "Add file" ]
 }
 
-@test "adds prefix on branch named with ticket number prefix" {
+@test "with key id: adds prefix on branch named with ticket id prefix" {
     git checkout -b MYPROJ-123-new-feature
 
     createCommitFile "Add file"
@@ -40,7 +40,15 @@ createCommitFile() {
     [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
 }
 
-@test "adds prefix on branch named by only the ticket number" {
+@test "with numeric id: adds prefix on branch named with ticket id prefix" {
+    git checkout -b 123-new-feature
+
+    createCommitFile "Add file"
+
+    [ "$(git log --format=%B)" == "#123 Add file" ]
+}
+
+@test "with key id: adds prefix on branch named by only the ticket id" {
     git checkout -b MYPROJ-123
 
     createCommitFile "Add file"
@@ -48,7 +56,15 @@ createCommitFile() {
     [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
 }
 
-@test "doesn't add a prefix if correct one is already given" {
+@test "with numeric id: adds prefix on branch named by only the ticket id" {
+    git checkout -b 123
+
+    createCommitFile "Add file"
+
+    [ "$(git log --format=%B)" == "#123 Add file" ]
+}
+
+@test "with key id: doesn't add a prefix if correct one is already given" {
     git checkout -b MYPROJ-123-new-feature
 
     createCommitFile "MYPROJ-123 Add file"
@@ -56,13 +72,30 @@ createCommitFile() {
     [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
 }
 
-@test "aborts commit if incorrect prefix one is already given" {
+@test "with numeric id: doesn't add a prefix if correct one is already given" {
+    git checkout -b 123-new-feature
+
+    createCommitFile "#123 Add file"
+
+    [ "$(git log --format=%B)" == "#123 Add file" ]
+}
+
+@test "with key id: aborts commit if incorrect prefix is already given" {
     git checkout -b MYPROJ-123-new-feature
 
     run createCommitFile "MYPROJ-100 Add file"
 
     [ "$status" -eq 1 ]
     [ "$output" = "commit-msg: message prefix 'MYPROJ-100' does not match branch prefix 'MYPROJ-123'" ]
+}
+
+@test "with numeric id: aborts commit if incorrect prefix is already given" {
+    git checkout -b 123-new-feature
+
+    run createCommitFile "#100 Add file"
+
+    [ "$status" -eq 1 ]
+    [ "$output" = "commit-msg: message prefix '#100' does not match branch prefix '123'" ]
 }
 
 @test "allows giving a prefix manually when on a non-prefixed branch" {
@@ -98,12 +131,20 @@ createCommitFile() {
     [ "$(git log --format=%B)" == $'MYPROJ-123 One\nTwo\n\nThree' ]
 }
 
-@test "prefixes even if another prefix is found later in the given message" {
+@test "with key id: prefixes even if another prefix is found later in the given message" {
     git checkout -b MYPROJ-123-new-feature
 
     createCommitFile "This enhances feature MYPROJ-100"
 
     [ "$(git log --format=%B)" == "MYPROJ-123 This enhances feature MYPROJ-100" ]
+}
+
+@test "with numeric id: prefixes even if another prefix is found later in the given message" {
+    git checkout -b 123-new-feature
+
+    createCommitFile "This enhances feature #100"
+
+    [ "$(git log --format=%B)" == "#123 This enhances feature #100" ]
 }
 
 @test "doesn't prefix merge commits" {
@@ -142,10 +183,18 @@ createCommitFile() {
     [ "$(git log -n 1 --format=%b)" == "body" ]
 }
 
-@test "allows a grouping token to be used at the start of the branch name" {
+@test "with key id: allows a grouping token to be used at the start of the branch name" {
     git checkout -b feature/MYPROJ-123-new-feature
 
     createCommitFile "Add file"
 
     [ "$(git log --format=%B)" == "MYPROJ-123 Add file" ]
+}
+
+@test "with numeric id: allows a grouping token to be used at the start of the branch name" {
+    git checkout -b feature/123-new-feature
+
+    createCommitFile "Add file"
+
+    [ "$(git log --format=%B)" == "#123 Add file" ]
 }
